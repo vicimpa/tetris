@@ -1,4 +1,4 @@
-export function randomSeed(s = Math.random() * 10000000000000) {
+export function makeRandom(s = Math.random() * 10000000000000) {
   var mask = 0xffffffff;
   var m_w = (123456789 + s) & mask;
   var m_z = (987654321 - s) & mask;
@@ -12,3 +12,5 @@ export function randomSeed(s = Math.random() * 10000000000000) {
     return result;
   };
 }
+
+export const random = makeRandom();

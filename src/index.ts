@@ -1,3 +1,3 @@
-import { GameEngine } from "lib/GameEngine";
+import { Game } from "core";
 
-new GameEngine('#app').start();
+new Game('#app');
