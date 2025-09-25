@@ -1,6 +1,5 @@
 import { nextSeed } from "data/rand";
 
-import { Bind } from "./Bind";
 import { createElement } from "./createElement";
 import { Figure } from "./Figure";
 import { getRandomFigure } from "./FigureStore";
@@ -94,10 +93,11 @@ export class GameEngine {
 
     addEventListener('resize', this.resize.bind(this, app));
     addEventListener('blur', () => this.pause = true);
+
     this.pauseButton.addEventListener('click', () => this.pause = !this.pause);
   }
 
-  @Bind()
+
   resize(elem: HTMLElement) {
     const p = 20;
     const { parentElement } = elem;
@@ -110,7 +110,7 @@ export class GameEngine {
     elem.style.transform = `scale(${scale})`;
   }
 
-  @Bind()
+
   rotate() {
     this.figure.rotate();
 
@@ -120,7 +120,7 @@ export class GameEngine {
     this.renderer.render();
   }
 
-  @Bind()
+
   move(dir: -1 | 1) {
     this.figure.move(dir, 0);
 
@@ -130,7 +130,7 @@ export class GameEngine {
     this.renderer.render();
   }
 
-  @Bind()
+
   newFigure() {
     if (this.figure)
       this.map.remove(this.figure);
@@ -151,17 +151,16 @@ export class GameEngine {
     this.rendererNext.render();
   }
 
-  @Bind()
+
   start() {
     if (this.work)
       return;
 
     this.work = true;
     this.tick();
-
   }
 
-  @Bind()
+
   stop() {
     if (!this.work)
       return;
@@ -169,7 +168,7 @@ export class GameEngine {
     this.work = false;
   }
 
-  @Bind()
+
   checkPause() {
     const show = 'show';
     const { classList } = this.pauseElement;
@@ -180,7 +179,7 @@ export class GameEngine {
       classList.remove(show);
   }
 
-  @Bind()
+
   tick() {
     if (!this.work)
       return;
@@ -193,7 +192,7 @@ export class GameEngine {
       pause,
     } = this.#ctrl;
 
-    requestAnimationFrame(this.tick);
+    requestAnimationFrame(() => this.tick());
 
     const { figure } = this;
     const time = performance.now();

@@ -1,4 +1,3 @@
-import { Bind } from "./Bind";
 import { Figure } from "./Figure";
 import { p } from "./Point";
 import { SizedArray } from "./SizedArray";
@@ -10,7 +9,6 @@ export class GameMap extends SizedArray {
     super(width, height);
   }
 
-  @Bind()
   entriesRender() {
     return this.entries()
       .map(([x, y, v]) => {
@@ -34,7 +32,6 @@ export class GameMap extends SizedArray {
   }
 
 
-  @Bind()
   add(figure: Figure) {
     const { figures } = this;
     const index = figures.indexOf(figure);
@@ -43,7 +40,6 @@ export class GameMap extends SizedArray {
       figures.push(figure);
   }
 
-  @Bind()
   remove(figure?: Figure) {
     if (!figure) {
       this.figures.splice(0);
@@ -57,7 +53,6 @@ export class GameMap extends SizedArray {
       figures.splice(index, 1);
   }
 
-  @Bind()
   fix(figure: Figure) {
     this.remove(figure);
 
@@ -70,42 +65,19 @@ export class GameMap extends SizedArray {
     }
   }
 
-  @Bind()
-  checkClear(s = { count: 0 }) {
-    for (let y = 0; y < this.height; y++) {
-      let clear = true;
+  checkClear() {
+    let count = 0;
 
-      for (let x = 0; x < this.width; x++) {
-        if (!this.get(p(x, y))) {
-          clear = false;
-          break;
-        }
-      }
+    for (let y = this.height - 1; y - count >= -1; y--) {
+      if (this.getRow(y - count).every(Boolean))
+        count++;
 
-      if (clear) {
-        const f = y;
+      if (!count)
+        continue;
 
-        for (let [x, y, v] of this.entries()) {
-          if (y >= f) continue;
-          this.set(p(x, y + 1), v);
-        }
-
-        s.count++;
-        this.checkClear(s);
-        break;
-      }
+      this.setRow(y, this.getRow(y - count));
     }
 
-    return s.count;
-  }
-
-  @Bind()
-  update() {
-
-  }
-
-  @Bind()
-  render() {
-
+    return count;
   }
 }

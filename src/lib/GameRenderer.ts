@@ -1,4 +1,3 @@
-import { Bind } from "./Bind";
 import { Figure } from "./Figure";
 import { GameMap } from "./GameMap";
 
@@ -25,7 +24,6 @@ export class GameRenderer {
     this.elem.style.imageRendering = 'pixelated';
   }
 
-  @Bind()
   append(query: string | HTMLElement): void {
     if (query instanceof HTMLElement) {
       query.appendChild(this.elem);
@@ -37,20 +35,6 @@ export class GameRenderer {
     return this.append(elem);
   }
 
-  @Bind()
-  resize() {
-    const { padding: p } = this;
-    const { parentElement } = this.elem;
-    if (!parentElement) return;
-
-    const { offsetWidth: W, offsetHeight: H } = parentElement;
-    const { offsetWidth: w, offsetHeight: h } = this.elem;
-
-    const scale = Math.min((W - p * 2) / w, (H - p * 2) / h);
-    this.elem.style.transform = `scale(${scale})`;
-  }
-
-  @Bind()
   render() {
     const { size, ctx, map, time } = this;
     const { width, height } = this.map;

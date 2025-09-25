@@ -1,4 +1,3 @@
-import { Bind } from "./Bind";
 import { Point } from "./Point";
 
 type TEntry = [number, number, number];
@@ -18,7 +17,7 @@ class SizedArray {
     this.height = height;
   }
 
-  @Bind()
+
   entries() {
     const { width, map: m } = this;
     const output = new Array<TEntry>(m.length);
@@ -34,7 +33,7 @@ class SizedArray {
     return output;
   }
 
-  @Bind()
+
   index(index: number | Point): number {
     const { width, height } = this;
     if (index instanceof Point) {
@@ -48,14 +47,29 @@ class SizedArray {
     return index;
   }
 
-  @Bind()
+
   get(index: number | Point): number {
     return this.map[this.index(index)];
   }
 
-  @Bind()
+
   set(index: number | Point, value: number): number {
     return this.map[this.index(index)] = value | 0;
+  }
+
+
+  getRow(index: number) {
+    if (index < 0 || index >= this.height)
+      return new Uint8Array(this.width);
+
+    index *= this.width;
+    return this.map.slice(index, index + this.width);
+  }
+
+
+  setRow(index: number, values: Uint8Array) {
+    index *= this.width;
+    this.map.set(values, index);
   }
 }
 
