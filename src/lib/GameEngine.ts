@@ -114,8 +114,43 @@ export class GameEngine {
   rotate() {
     this.figure.rotate();
 
-    if (this.figure.haveCollizion(this.map))
-      this.figure.back();
+    // Wall kick system: try multiple offset positions if rotation causes collision
+    if (this.figure.haveCollizion(this.map)) {
+      // Test offsets in order: right, left, right+up, left+up, right+down, left+down
+      const kickTests = [
+        [1, 0],   // Move right
+        [-1, 0],  // Move left
+        [2, 0],   // Move right x2
+        [-2, 0],  // Move left x2
+        [1, -1],  // Move right + up
+        [-1, -1], // Move left + up
+        [2, -1],  // Move right x2 + up
+        [-2, -1], // Move left x2 + up
+        [0, -1],  // Move up
+        [1, 1],   // Move right + down
+        [-1, 1],  // Move left + down
+      ];
+
+      let kicked = false;
+      for (const [offsetX, offsetY] of kickTests) {
+        this.figure.x += offsetX;
+        this.figure.y += offsetY;
+
+        if (!this.figure.haveCollizion(this.map)) {
+          kicked = true;
+          break;
+        }
+
+        // Revert offset for next test
+        this.figure.x -= offsetX;
+        this.figure.y -= offsetY;
+      }
+
+      // If no kick worked, revert rotation
+      if (!kicked) {
+        this.figure.back();
+      }
+    }
 
     this.renderer.render();
   }
